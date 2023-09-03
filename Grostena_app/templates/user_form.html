@@ -1,0 +1,13 @@
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <h2>Выберите категории ремонтов:</h2>
+    {% for category in form.repair_categories %}
+        <label>
+            {{ category }}
+        </label><br>
+    {% endfor %}
+
+    <button type="submit">Зарегистрировать</button>
+</form>

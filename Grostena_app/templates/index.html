@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Grosstena - artimiausiu servisu paieska!</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <h1>Grosstena </h1>
+
+    <form method="post" action="{% url 'search_results' %}">
+        {% csrf_token %}
+        <label for="repair_type">Remonto paieška:</label>
+        <input type="text" id="repair_type" name="repair_type" required>
+        <button type="submit">Pajeska</button>
+        {% if user.is_authenticated %}
+            <p> {{ user.username }}!</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+        <a href="{% url 'user_form' %}">Registracija</a>
+    </form>
+<div id="content">
+    <p id="greeting"></p>
+    <!-- Other content to be translated -->
+</div>
+
+<button id="toggleLanguage">Toggle Language</button>
+
+</body>
+</html>

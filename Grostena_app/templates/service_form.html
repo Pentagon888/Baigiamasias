@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'register_service' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Uzsiregistruoti</button>
+</form>

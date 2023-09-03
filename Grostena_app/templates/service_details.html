@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Grosstena - Rezultatai</title>
+    <!-- Подключение стилей Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+
+<body>
+    <h1>Rezultatai:</h1>
+    <ul>
+        {% for service in services %}
+            <li>
+                <strong>{{ service.name }}</strong><br>
+                {{ service.address }}<br>
+                Telefonas: {{ service.phone_number }}<br>
+                Darbo valandos: {{ service.working_hours }}
+                <!-- Добавьте кнопку "Показать на карте" и атрибуты для хранения координат сервиса -->
+                <button class="show-on-map-btn" data-latitude="{{ service.location_lat }}" data-longitude="{{ service.location_lon }}">Показать на карте</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Элемент для отображения карты -->
+    <div id="map" style="height: 500px;"></div>
+
+    <!-- Подключение библиотек Leaflet.js и Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <!-- Подключение вашего файла map.js -->
+    <script src="{% static 'map.js' %}"></script>
+
+    <!-- Скрипт для отображения маршрута от моей геолокации до сервиса -->
+    <script>
+        // Получение всех координат сервисов и добавление маркеров на карту
+        var servicesData = [
+            {% for service in services %}
+                {
+                    name: "{{ service.name }}",
+                    latitude: "{{ service.location_lat }}",
+                    longitude: "{{ service.location_lon }}"
+                },
+            {% endfor %}
+        ];
+
+        function showServicesOnMap() {
+            // Отображение маркеров сервисов на карте
+            servicesData.forEach(function(service) {
+                var latitude = parseFloat(service.latitude);
+                var longitude = parseFloat(service.longitude);
+                L.marker([latitude, longitude]).addTo(map).bindPopup(service.name);
+            });
+        }
+
+        // Инициализация карты
+        var map = L.map('map').setView([], 10);
+
+        // Используйте слой OpenStreetMap для стандартного стиля карты
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // Вызов функции для отображения маркеров сервисов на карте
+        showServicesOnMap();
+    </script>
+<!-- Скрипт для отображения маршрута от моей геолокации до сервиса -->
+<script>
+    // Функция для отображения маршрута на карте
+    function showRouteToService(latitude, longitude) {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var userLatitude = position.coords.latitude;
+                var userLongitude = position.coords.longitude;
+
+                L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLatitude, userLongitude), // Геолокация пользователя
+                        L.latLng(latitude, longitude) // Местоположение сервиса
+                    ],
+                    routeWhileDragging: true,
+                    show: false // Не показывать маршрут сразу, а показать только после клика
+                }).addTo(map);
+            });
+        } else {
+            alert('Геолокация не поддерживается в вашем браузере');
+        }
+    }
+
+    // Обработчик событий для кнопок "Показать на карте"
+    var showOnMapButtons = document.querySelectorAll('.show-on-map-btn');
+    showOnMapButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var latitude = parseFloat(button.getAttribute('data-latitude'));
+            var longitude = parseFloat(button.getAttribute('data-longitude'));
+            showRouteToService(latitude, longitude);
+        });
+    });
+</script>
+
+</body>
+</html>

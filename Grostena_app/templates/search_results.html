@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Grosstena - Rezultatai</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <h1>Rezultatai:</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="repair_type">Remonto Kategorija:</label>
+        <select name="repair_type" id="repair_type">
+            {% for category in repair_categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Rodyti Autoservisus</button>
+
+    </form>
+
+    <a button href="{% url 'index' %}">Pajeska</a>
+    <ul>
+{% for service in services %}
+        <li>
+            <strong>{{ service.name }}</strong><br>
+            {{ service.address }}<br>
+            Telefono Numeris: {{ service.phone_number }}<br>
+            Darbo Valandos: {{ service.working_hours }}
+        </li>
+    {% endfor %}
+</ul>
+
+<form method="post" action="{% url 'register_service' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <h2>Pasirinkite remonto kategorija:</h2>
+    {% for category in form.categories %}
+        <label>
+        </label><br>
+    {% endfor %}
+
+    <button type="submit">Registruotis</button>
+</form>
+</form>
+
+
+    <div id="map" style="height: 500px;"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{% static 'js/map.js' %}"></script>
+
+<!-- Скрипт для отображения маркера вашей геолокации на карте -->
+<script>
+    var myLocationIcon = L.icon({
+        iconUrl: '{% static "images/my_location_icon.png" %}', // Путь к иконке вашей геолокации
+        iconSize: [32, 32],
+        iconAnchor: [16, 32]
+    });
+
+    function showUserLocationOnMap() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var userLatitude = position.coords.latitude;
+                var userLongitude = position.coords.longitude;
+
+                L.marker([userLatitude, userLongitude], { icon: myLocationIcon }).addTo(map).bindPopup('Ваша геолокация').openPopup();
+            });
+        } else {
+            alert('Геолокация не поддерживается в вашем браузере');
+        }
+    }
+    function Service_form() {
+    window.location.href = "{% url 'service_form' %}";
+    }
+    // Вызов функции для отображения маркера вашей геолокации на карте
+    showUserLocationOnMap();
+
+
+    <!-- Скрипт для отображения маршрута от моей геолокации до сервиса -->
+
+        // Получение всех координат сервисов и добавление маркеров на карту
+        var servicesData = [
+            {% for service in services %}
+                {
+                    name: "{{ service.name }}",
+                    latitude: "{{ service.location_lat }}",
+                    longitude: "{{ service.location_lon }}"
+                },
+            {% endfor %}
+        ];
+
+        function showServicesOnMap() {
+            // Отображение маркеров сервисов на карте
+            servicesData.forEach(function(service) {
+                var latitude = parseFloat(service.latitude);
+                var longitude = parseFloat(service.longitude);
+                L.marker([latitude, longitude]).addTo(map).bindPopup(service.name);
+            });
+        }
+
+        // Инициализация карты
+        var map = L.map('map').setView([54.75271573295219, 25.24918544483979], 13);
+
+        // Используйте слой OpenStreetMap для стандартного стиля карты
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // Вызов функции для отображения маркеров сервисов на карте
+        showServicesOnMap();
+    </script>
+</body>
+</html>

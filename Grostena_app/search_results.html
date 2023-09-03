@@ -1,0 +1,124 @@
+ <!-- search_results.html -->
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Štai ka mum pavyko rasti</title>
+    <!-- Подключение стилей Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+</head>
+
+<body>
+<form method="post">
+    {% csrf_token %}
+    <a href="{% url 'index' %}">Grostena</a>
+    <label for="repair_type">Выберите категорию ремонта:</label>
+    <select name="repair_type" id="repair_type">
+        <option value="Electrical">Электрика</option>
+        <!-- другие опции -->
+    </select>
+    <button type="submit">Показать сервисы</button>
+</form>
+
+<h1>Результаты:</h1>
+<ul>
+    {% for service in services %}
+        <li>
+            <strong>{{ service.name }}</strong><br>
+            {{ service.address }}<br>
+            Телефон: {{ service.phone_number }}<br>
+            Режим работы: {{ service.working_hours }}
+            <form method="get" action="{% url 'register_service' service.id %}">
+                <button type="submit">Зарегистрировать Autoservice</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<h1>Результаты:</h1>
+<ul>
+    {% for service in services %}
+        <li>
+            <strong>{{ service.name }}</strong><br>
+            {{ service.address }}<br>
+            Телефон: {{ service.phone_number }}<br>
+            Режим работы: {{ service.working_hours }}
+            <form method="get" action="{% url 'register_service' service.id %}">
+                <button type="submit">Зарегистрировать Autoservice</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<h1>Результаты:</h1>
+<ul>
+    {% for service in services %}
+        <li>
+            <strong>{{ service.name }}</strong><br>
+            {{ service.address }}<br>
+            Телефон: {{ service.phone_number }}<br>
+            Режим работы: {{ service.working_hours }}
+            <form method="get" action="{% url 'register_service' service.id %}">
+                <button type="submit">Зарегистрировать Autoservice</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+    <div class="map-container">
+        <!-- Элемент для отображения карты -->
+        <div id="map"></div>
+    </div>
+
+    <div class="content">
+        <h1>Štai ka mum pavyko rasti</h1>
+        {% if services %}
+            <ul>
+                {% for service in services %}
+                    <li>
+                        <strong>{{ service.name }}</strong> - {{ service.location_lat }}, {{ service.location_lon }}
+                        <!-- Кнопка для отображения на карте -->
+                        <button onclick="showOnMap('{{ service.location_lat }}', '{{ service.location_lon }}', '{{ service.name }}', '{{ service.phone_number }}')">Показать на карте</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Нет доступных автосервисов</p>
+        {% endif %}
+
+        <!-- Информационная таблица -->
+        <div id="info-table"></div>
+    </div>
+
+    <!-- Подключение библиотек Leaflet.js и Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <!-- Подключение вашего файла map.js -->
+    <script src="{% static 'map.js' %}"></script>
+</body>
+</html>
+from Grostena_app.models import AutoService
+
+# Creating an AutoService object
+autoservice1 = AutoService(
+    name="Autoservice 1",
+    location_lat=54.752592105369054,
+    location_lon=25.214944805362187,
+    phone_number="+370000000",
+    working_hours="10:00 - 18:00"
+)
+
+# Save the object to the database
+autoservice1.save()
+from Grostena_app.models import AutoService
+
+# Creating and saving an AutoService object in one step
+autoservice2 = AutoService.objects.create(
+    name="Autoservice 2",
+    location_lat=54.744517,
+    location_lon=25.254035,
+    phone_number="+370111111",
+    working_hours="09:00 - 17:00"
+)
