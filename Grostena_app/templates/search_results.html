@@ -16,39 +16,38 @@
             {% endfor %}
         </select>
         <button type="submit">Rodyti Autoservisus</button>
-
     </form>
 
     <a button href="{% url 'index' %}">Pajeska</a>
     <ul>
-{% for service in services %}
-        <li>
-            <strong>{{ service.name }}</strong><br>
-            {{ service.address }}<br>
-            Telefono Numeris: {{ service.phone_number }}<br>
-            Darbo Valandos: {{ service.working_hours }}
-        </li>
-    {% endfor %}
-</ul>
+        {% for service in services %}
+            <li>
+                <strong>{{ service.name }}</strong><br>
+                {{ service.address }}<br>
+                Telefono Numeris: {{ service.phone_number }}<br>
+                Darbo Valandos: {{ service.working_hours }}
+            </li>
+        {% endfor %}
+    </ul>
 
-<form method="post" action="{% url 'register_service' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
+    {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'register_service' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-    <h2>Pasirinkite remonto kategorija:</h2>
-    {% for category in form.categories %}
-        <label>
-        </label><br>
-    {% endfor %}
+            <h2>Pasirinkite remonto kategorija:</h2>
+            {% for category in form.categories %}
+                <label></label><br>
+            {% endfor %}
 
-    <button type="submit">Registruotis</button>
-</form>
-</form>
-
+            <button type="submit">Registruotis</button>
+        </form>
+    {% endif %}
 
     <div id="map" style="height: 500px;"></div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="{% static 'js/map.js' %}"></script>
+
 
 <!-- Скрипт для отображения маркера вашей геолокации на карте -->
 <script>
