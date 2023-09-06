@@ -18,15 +18,19 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
+
+
 urlpatterns = [
     path('search_results/', views.search_results, name='search_results'),
+
     path('service_details/<int:service_id>/', views.service_details, name='service_details'),
     path('', views.index, name='index'),
     path('register_service/', views.register_service, name='register_service'),    path('service_form/', views.service_form, name='service_form'),
     path('switch_language/<str:language>/', views.switch_language, name=''),
-
+    path('switch_language/<str:language>/', views.switch_language, name='switch_language'),
     path('user_form/', views.user_form, name='user_form'),
     path('login/', views.login_view, name='login'),  # Определение URL для login_view
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
 
 ]

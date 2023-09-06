@@ -1,37 +1,44 @@
-style.css. /* Стили для списка и кнопок */
+/* Стили для списка */
 ul {
-    margin: 0;
-    padding: 0;
     list-style: none;
+    padding: 0;
 }
 
 li {
-    margin-bottom: 20px; /* Отступ между элементами списка */
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+/* Стили для кнопок */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 button {
-    background-color: #4CAF50; /* Задайте желаемый цвет фона для кнопок */
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Расположение кнопок в одну строку */
-.button-container {
-    display: flex;
-    gap: 10px; /* Отступ между кнопками */
-    margin-bottom: 20px; /* Отступ снизу, чтобы создать пространство между кнопками и картой */
+button:hover {
+    background-color: #0056b3;
 }
 
 /* Стили для контейнера карты */
 .map-container {
     position: relative;
-    height: 400px; /* Установите желаемую высоту карты */
+    height: 400px;
 }
 
 /* Стили для карты */
 #map {
     width: 100%;
-    height: 500px; /* Установите желаемую высоту карты */
+    height: 500px;
 }

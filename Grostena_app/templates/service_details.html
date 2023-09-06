@@ -34,6 +34,38 @@
 
     <!-- Скрипт для отображения маршрута от моей геолокации до сервиса -->
     <script>
+
+    {% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ service.name }}</h1>
+  <p>{{ service.address }}</p>
+
+  <h2>Комментарии:</h2>
+  <ul>
+    {% for comment in comments %}
+      <li>{{ comment.text }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Средний рейтинг: {{ average_rating|default:"Нет оценок" }}</h2>
+
+  <h2>Оставить комментарий:</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Отправить комментарий</button>
+  </form>
+
+  <h2>Поставить оценку:</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ rating_form.as_p }}
+    <button type="submit">Поставить оценку</button>
+  </form>
+{% endblock %}
+
+
         // Получение всех координат сервисов и добавление маркеров на карту
         var servicesData = [
             {% for service in services %}

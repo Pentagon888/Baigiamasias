@@ -1,5 +1,5 @@
 from geopy.distance import geodesic
-from .services import search_services
+
 from .models import AutoService
 
 def search_services(keyword, user_location):

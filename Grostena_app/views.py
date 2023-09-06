@@ -1,11 +1,18 @@
+
+
 import translation as translation
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+import asyncio
+from . import models
 from .forms import AutoServiceForm
 from .models import AutoService, RepairCategory
 import logging
 from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -18,21 +25,22 @@ from django.utils.translation import activate, get_language
 
 logger = logging.getLogger(__name__)
 
-
-
+async def async_view(request):
+    await asyncio.sleep(1)
+    return JsonResponse({'message': 'Async view response'})
 
 def switch_language(request, language):
-    # Перенаправляем пользователя обратно на ту же страницу, с которой он пришел
-    next_url = request.META.get('HTTP_REFERER', '/')
-    response = redirect(next_url)
+    # Устанавливаем выбранный язык для текущей сессии
+    request.session[translation.LANGUAGE_SESSION_KEY] = language
 
-    # Устанавливаем язык в сессии
-    request.session['django_language'] = language
 
-    # Устанавливаем язык в куках
-    response.set_cookie('django_language', language)
+    # Если есть предыдущая страница, перенаправляем пользователя на нее
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return HttpResponseRedirect(referer)
 
-    return response
+    # В противном случае перенаправляем пользователя на главную страницу
+    return HttpResponseRedirect(reverse('index'))
 
 def register_service(request):
     if request.method == 'POST':
@@ -66,6 +74,9 @@ def search_results(request):
 
     return render(request, 'search_results.html', {'services': [], 'repair_categories': []})
 
+
+
+
 def index(request):
 
     response = render(request, 'index.html', {'user': request.user})
@@ -87,6 +98,7 @@ def service_form(request):
 def service_details(request, service_id):
     service = get_object_or_404(AutoService, id=service_id)
     return render(request, 'service_details.html', {'service': service})
+
 
 
 def registration_view(request):
