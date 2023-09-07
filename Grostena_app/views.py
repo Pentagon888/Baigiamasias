@@ -107,7 +107,7 @@ def registration_view(request):
         if form.is_valid():
             user = form.save()
             # Автоматический вход после регистрации
-            username = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('Vartotojo vardas')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
@@ -122,7 +122,7 @@ def user_form(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            username = form.cleaned_data['Vartotojo vardas']
             if User.objects.filter(username=username).exists():
                 return render(request, 'user_form.html', {'form': form, 'user_already_exists': True})
             else:

@@ -55,7 +55,7 @@ function showOnMap(latitude, longitude, serviceName, phoneNumber) {
         });
     } else {
         // Геолокация не поддерживается в этом браузере, можно вывести сообщение пользователю
-        alert('Геолокация не поддерживается в вашем браузере');
+        alert('Geolokacija nepasiekama');
     }
 }
 
@@ -79,11 +79,11 @@ function showUserLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
-            L.marker([latitude, longitude]).addTo(map).bindPopup('Ваша геолокация').openPopup();
+            L.marker([latitude, longitude]).addTo(map).bindPopup('Jusu vieta!').openPopup();
         });
     } else {
         // Геолокация не поддерживается в этом браузере, можно вывести сообщение пользователю
-        alert('Геолокация не поддерживается в вашем браузере');
+        alert('Geolokacija nepasiekiama');
     }
 }
 

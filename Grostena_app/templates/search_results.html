@@ -63,10 +63,10 @@
                 var userLatitude = position.coords.latitude;
                 var userLongitude = position.coords.longitude;
 
-                L.marker([userLatitude, userLongitude], { icon: myLocationIcon }).addTo(map).bindPopup('Ваша геолокация').openPopup();
+                L.marker([userLatitude, userLongitude], { icon: myLocationIcon }).addTo(map).bindPopup('Jusu vieta!').openPopup();
             });
         } else {
-            alert('Геолокация не поддерживается в вашем браузере');
+            alert('Geolokacija nepasiekiama');
         }
     }
     function Service_form() {
